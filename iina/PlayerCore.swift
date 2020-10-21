@@ -80,6 +80,7 @@ class PlayerCore: NSObject {
   lazy var subsystem = Logger.Subsystem(rawValue: "player\(label!)")
 
   var label: String!
+  var isManagedByPlugin = false
 
   @available(macOS 10.12.2, *)
   var touchBarSupport: TouchBarSupport {

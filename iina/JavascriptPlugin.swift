@@ -47,6 +47,8 @@ class JavascriptPlugin: NSObject {
     }
   }
 
+  var globalInstance: JavascriptPluginInstance?
+
   @objc var enabled: Bool {
     didSet {
       UserDefaults.standard.set(enabled, forKey: "PluginEnabled." + identifier)
@@ -70,6 +72,7 @@ class JavascriptPlugin: NSObject {
 
   var root: URL
   let entryPath: String
+  let globalEntryPath: String?
   let preferencesPage: String?
   let helpPage: String?
 
@@ -83,6 +86,7 @@ class JavascriptPlugin: NSObject {
   let sidebarTabName: String?
 
   var entryURL: URL
+  var globalEntryURL: URL?
   var preferencesPageURL: URL?
   var helpPageURL: URL?
   var githubURLString: String? {
@@ -127,6 +131,14 @@ class JavascriptPlugin: NSObject {
 
     savePluginOrder(result)
     return result
+  }
+
+  static func loadGlobalInstances() {
+    plugins.forEach { plugin in
+      if plugin.globalEntryPath != nil {
+        plugin.globalInstance = .init(player: nil, plugin: plugin)
+      }
+    }
   }
 
   static func savePluginOrder(_ values: [JavascriptPlugin]? = nil) {
@@ -277,6 +289,7 @@ class JavascriptPlugin: NSObject {
     self.name = name
     self.version = version
     self.entryPath = entry
+    self.globalEntryPath = jsonDict["globalEntry"] as? String
     self.authorName = authorName
     self.authorURL = author["url"]
     self.authorEmail = author["email"]
@@ -321,6 +334,7 @@ class JavascriptPlugin: NSObject {
 
     guard let entryURL = resolvePath(entryPath, root: root) else { return nil }
     self.entryURL = entryURL
+    self.globalEntryURL = resolvePath(globalEntryPath, root: root)
     self.preferencesPageURL = resolvePath(preferencesPage, root: root)
     self.helpPageURL = resolvePath(helpPage, root: root, allowNetwork: true)
 

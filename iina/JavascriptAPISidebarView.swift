@@ -24,7 +24,7 @@ class JavascriptAPISidebarView: JavascriptAPI, JavascriptAPISidebarViewExportabl
 
   override func cleanUp(_ instance: JavascriptPluginInstance) {
     listeners.removeAll()
-    player.mainWindow.quickSettingView.removePluginTab(withIdentifier: instance.plugin.identifier)
+    player!.mainWindow.quickSettingView.removePluginTab(withIdentifier: instance.plugin.identifier)
   }
 
   func loadFile(_ path: String) {
@@ -35,11 +35,11 @@ class JavascriptAPISidebarView: JavascriptAPI, JavascriptAPISidebarViewExportabl
 
   func show() {
     let id = pluginInstance.plugin.identifier
-    player.mainWindow.showSettingsSidebar(tab: .plugin(id: id), force: true, hideIfAlreadyShown: false)
+    player!.mainWindow.showSettingsSidebar(tab: .plugin(id: id), force: true, hideIfAlreadyShown: false)
   }
 
   func hide() {
-    player.mainWindow.hideSideBar()
+    player!.mainWindow.hideSideBar()
   }
 
   func sendMessage(_ name: String, _ data: JSValue) {
